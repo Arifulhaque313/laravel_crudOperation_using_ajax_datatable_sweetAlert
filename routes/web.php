@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\StudentController;
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('layouts.app');
+// });
+
+// Route::get('/student', function () {
+//     return view('student.index');
+// });
+Route::get('/',[studentController::class, 'index']);
+Route::get('/fetchStudent',[studentController::class, 'fetchStudent'])->name('fetchStudent');
+
+Route::post('/store',[studentController::class, 'store'])->name('students.store');
+Route::get('/edit',[studentController::class, 'edit'])->name('student.edit');
+Route::put('/update',[studentController::class, 'update'])->name('student.update');
