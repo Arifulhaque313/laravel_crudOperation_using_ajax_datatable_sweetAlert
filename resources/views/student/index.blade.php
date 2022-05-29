@@ -130,6 +130,26 @@
 <!-- modal end  -->
 
 
+<!-- delete modal  -->
+
+<div class="modal fade" id="deleteStudent" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+     
+      <div class="modal-body">
+        Are You Sure ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="deleteStudentmodal btn btn-danger">Confirm Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- end delete modal  -->
+
+
 @endsection
 
 
@@ -137,6 +157,8 @@
 @section('script')
 
   <script>
+
+    var deleteId = null;
     $(document).ready(function(){
 
       fetchStudent();
@@ -157,7 +179,7 @@
                       <td>'+items.email+'</td>\
                       <td>'+items.phone+'</td>\
                       <td><button type="button" value="'+items.id+'" class="editStudent btn btn-primary btn-sm">edit</button></td>\
-                      <td><button type="button" value="'+items.id+'" class="deleteStudent btn btn-danger btn-sm">delete</button></td>\
+                      <td><button type="button" value="'+items.id+'" class="deleteStudent btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteStudent" >delete</button></td>\
                     </tr>'
                  );
               });
@@ -197,7 +219,8 @@
      // edit fetch section
     
     
-     //  update section 
+
+     // update section 
     $(document).on('click','.studentUpdate',function(e){
        e.preventDefault(); 
        $(this).text("updating....")
@@ -250,15 +273,47 @@
                   $('#editStudent').find('input').val("");
                   $('.studentUpdate').text("updating....");
                   fetchStudent();
-
-
           }
-
-
 
          }
        });
     });
+    // end update script 
+
+
+
+
+    // delete ajax 
+
+      $(document).on('click','.deleteStudent',function(){
+        deleteId = $(this).val();
+        
+      });
+
+      $(document).on('click','.deleteStudentmodal',function(e){
+        $.ajax({
+          type: "delete",
+          url: "{{route('student.delete')}}",
+          data: {
+            id:deleteId,
+            _token: '{{csrf_token()}}',
+          },
+          success: function (response) {
+              if(response.status == 200){
+                $('#success_message').html("");
+                $('#success_message').addClass("alert alert-danger");
+                $('#success_message').text(response.message);
+                $('#deleteStudent').modal('hide');
+                fetchStudent();
+              }
+          }
+        });
+        
+      });
+    // delete ajax end  
+
+
+
 
 
 
@@ -295,8 +350,6 @@
                   $('#saveform_errlist').append('<li>'+err_values+'</li>')
                 });
               }
-
-
               else {
                   $('#saveform_errlist').html("");
                   $('#success_message').addClass("alert alert-success");
@@ -305,24 +358,16 @@
                   $('#addStudent').find('input').val("");
                   fetchStudent();
               }
-
             }
-
-          });
-          
-          
+          });  
         });
-
     });
   </script>
 
 @endsection
 
-
 <!-- <script>
     $(document).ready(function(){
-
-      
         $('.add_students').on('click',function(e){
           e.preventDefault();
 
@@ -354,7 +399,6 @@
                   $('#saveform_errlist').append('<li>'+err_values+'</li>')
                 });
               }
-
               else {
                   $('#saveform_errlist').html("");
                   $('#success_message').addClass("alert alert-success");
