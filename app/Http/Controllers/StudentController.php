@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
+
     public function index(){
         return view('student.index');
     }
+
 
     public function fetchStudent(){
         $students = student::get();
@@ -20,7 +22,7 @@ class StudentController extends Controller
     }
 
 
-
+    // store data 
     public function store(Request $request){
         
         $validator = Validator::make($request->all(),[
@@ -74,7 +76,7 @@ class StudentController extends Controller
         }
     }
 
-
+    // update 
     public function update(Request $request){
         $id = $request->id;
 
@@ -120,11 +122,9 @@ class StudentController extends Controller
     }
 
 
-
+    // destory class 
     public function destroy(Request $request){
-
         $id = $request->id;
-
         $studentData = student::find($id)->delete();
 
         if($studentData){

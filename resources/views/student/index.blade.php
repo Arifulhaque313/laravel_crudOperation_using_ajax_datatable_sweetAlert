@@ -55,21 +55,25 @@
                     <div class="mb-3">
                       <label for="" class="form-label">Name</label>
                       <input type="text" name="name" class="form-control name">
+                      <div id="name2"></div>
                     </div>
 
                     <div class="mb-3">
                       <label for="" class="form-label">Email</label>
                       <input type="email" name="email" class="form-control email">
+                      <div id="email2"></div>
                     </div>
 
                     <div class="mb-3">
                       <label for="" class="form-label">Mobile</label>
                       <input type="text" name="mobile" class="form-control mobile">
+                      <div id="mobile2"></div>
                     </div>
 
                     <div class="mb-3">
                       <label for="" class="form-label">password</label>
                       <input type="password" name="password" class="form-control password">
+                      <div id="password2"></div>
                     </div>
             </form>
       </div>
@@ -148,7 +152,6 @@
 </div>
 
 <!-- end delete modal  -->
-
 
 @endsection
 
@@ -259,7 +262,6 @@
             $('#update_errlist').html("");
                   $('#success_message').addClass("alert alert-danger");
                   $('#success_message').text(response.message);
-
                   $('.studentUpdate').text("updating....");
           } 
 
@@ -284,10 +286,8 @@
 
 
     // delete ajax 
-
       $(document).on('click','.deleteStudent',function(){
         deleteId = $(this).val();
-        
       });
 
       $(document).on('click','.deleteStudentmodal',function(e){
@@ -301,6 +301,14 @@
           success: function (response) {
               if(response.status == 200){
                 $('#success_message').html("");
+                $('#success_message').addClass("alert alert-success");
+                $('#success_message').text(response.message);
+                $('#deleteStudent').modal('hide');
+                fetchStudent();
+              }
+
+              else{
+                $('#success_message').html("");
                 $('#success_message').addClass("alert alert-danger");
                 $('#success_message').text(response.message);
                 $('#deleteStudent').modal('hide');
@@ -311,10 +319,6 @@
         
       });
     // delete ajax end  
-
-
-
-
 
 
 
@@ -346,11 +350,35 @@
                 $('#saveform_errlist').html("");
                 $('#saveform_errlist').addClass("alert alert-danger");
 
+                // $('#name').html("");
+                // $('#email').html("");
+                // $('#mobile').html("");
+                // $('#password').html("");
+
+                // $('#name').addClass("text-danger");
+                // $('#email').addClass("text-danger");
+                // $('#mobile').addClass("text-danger");
+                // $('#password').addClass("text-danger");
+
+                // $('#name').text(response.errors.name);
+                // $('#email').text(response.errors.email);
+                // $('#mobile').text(response.errors.mobile);
+                // $('#password').text(response.errors.password);
+
+
+                
+
                 $.each(response.errors,function(key,err_values){
                   $('#saveform_errlist').append('<li>'+err_values+'</li>')
                 });
               }
               else {
+
+                  // $('#name').html("");
+                  // $('#email').html("");
+                  // $('#mobile').html("");
+                  // $('#password').html("");
+
                   $('#saveform_errlist').html("");
                   $('#success_message').addClass("alert alert-success");
                   $('#success_message').text(response.message);
@@ -411,3 +439,51 @@
         });
     });
   </script> -->
+
+
+
+
+  <!-- // add student script 
+        $('.add_students').on('click',function(e){
+          e.preventDefault();
+
+          var data = {
+            'name': $('.name').val(),
+            'email': $('.email').val(),
+            'mobile': $('.mobile').val(),
+            'password': $('.password').val()
+          }
+
+          $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             }
+           });
+
+          $.ajax({
+            type:"post",
+            url:"{{ route('students.store')}}",
+            data:data,
+            dataType:"json",
+            success: function(response){
+              
+              if(response.status == 400){
+                $('#saveform_errlist').html("");
+                $('#saveform_errlist').addClass("alert alert-danger");
+
+                $.each(response.errors,function(key,err_values){
+                  $('#saveform_errlist').append('<li>'+err_values+'</li>')
+                });
+              }
+              else {
+                  $('#saveform_errlist').html("");
+                  $('#success_message').addClass("alert alert-success");
+                  $('#success_message').text(response.message);
+                  $('#addStudent').modal('hide');
+                  $('#addStudent').find('input').val("");
+                  fetchStudent();
+              }
+            }
+          });  
+        });
+    }); -->
